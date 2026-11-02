@@ -1,0 +1,48 @@
+[Unit]
+Description=АСУ Охрана Труда - FastAPI Application
+After=network.target postgresql.service redis.service
+Wants=postgresql.service redis.service
+
+[Service]
+Type=exec
+User=rcs_ot_user
+Group=rcs_ot_user
+WorkingDirectory=/path/to/rcs_ot
+Environment="RCS_OT_HOME=/path/to/rcs_ot"
+Environment="PATH=/path/to/rcs_ot/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+
+# Запуск через Gunicorn с Uvicorn workers
+ExecStart=/path/to/rcs_ot/.venv/bin/gunicorn app.main:app \
+  --workers 4 \
+  --worker-class uvicorn.workers.UvicornWorker \
+  --bind 127.0.0.1:8000 \
+  --access-logfile /path/to/rcs_ot/logs/access.log \
+  --error-logfile /path/to/rcs_ot/logs/error.log \
+  --log-level info \
+  --timeout 120 \
+  --keep-alive 5 \
+  --max-requests 1000 \
+  --max-requests-jitter 50
+
+# Перезапуск при падении
+Restart=always
+RestartSec=5
+
+# Ограничения ресурсов
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Безопасность
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/path/to/rcs_ot/data /path/to/rcs_ot/uploads /path/to/rcs_ot/logs /path/to/rcs_ot/backups
+
+# Логирование
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rcs_ot
+
+[Install]
+WantedBy=multi-user.target
