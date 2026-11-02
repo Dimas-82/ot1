@@ -1,36 +1,35 @@
 @echo off
-chcp 65001 >nul
 echo.
 echo ==========================================
-echo   АСУ "Охрана труда" - Быстрый старт
+echo   ASU "Occupational Safety" - Quick Start
 echo ==========================================
 echo.
 
-:: Проверка наличия backend папки
+:: Check backend folder
 if not exist backend (
-    echo [ОШИБКА] Папка backend не найдена!
+    echo [ERROR] Backend folder not found!
     echo.
-    echo Убедитесь, что вы находитесь в корневой папке проекта.
+    echo Make sure you are in the project root folder.
     echo.
     pause
     exit /b 1
 )
 
-:: Проверка наличия виртуального окружения
+:: Check virtual environment
 if not exist backend\venv (
-    echo [INFO] Виртуальное окружение не найдено.
-    echo [INFO] Запуск установки...
+    echo [INFO] Virtual environment not found.
+    echo [INFO] Running installation...
     echo.
     cd backend
     call setup.bat
     cd ..
 ) else (
-    echo [OK] Виртуальное окружение найдено
+    echo [OK] Virtual environment found
 )
 echo.
 
-:: Запуск сервера
-echo [INFO] Переход в папку backend...
+:: Start server
+echo [INFO] Starting server...
 cd backend
 echo.
 call run.bat

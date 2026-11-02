@@ -1,57 +1,56 @@
 @echo off
-chcp 65001 >nul
 echo.
 echo ==========================================
-echo   АСУ "Охрана труда" - Запуск
+echo   ASU "Occupational Safety" - Start Server
 echo ==========================================
 echo.
 
-:: Проверка наличия виртуального окружения
+:: Check virtual environment
 if not exist venv (
-    echo [ОШИБКА] Виртуальное окружение не найдено!
+    echo [ERROR] Virtual environment not found!
     echo.
-    echo Сначала выполните установку: setup.bat
+    echo Run setup.bat first to install the application.
     echo.
     pause
     exit /b 1
 )
 
-:: Активация виртуального окружения
-echo [INFO] Активация виртуального окружения...
+:: Activate virtual environment
+echo [INFO] Activating virtual environment...
 call venv\Scripts\activate.bat
 if errorlevel 1 (
-    echo [ОШИБКА] Не удалось активировать виртуальное окружение
+    echo [ERROR] Failed to activate virtual environment
     pause
     exit /b 1
 )
-echo [OK] Виртуальное окружение активировано
+echo [OK] Virtual environment activated
 echo.
 
-:: Проверка наличия main.py
+:: Check main.py
 if not exist main.py (
-    echo [ОШИБКА] Файл main.py не найден!
+    echo [ERROR] File main.py not found!
     pause
     exit /b 1
 )
 
-echo [INFO] Запуск сервера...
+echo [INFO] Starting server...
 echo.
 echo ==========================================
-echo   Сервер запущен!
+echo   Server started!
 echo ==========================================
 echo.
-echo Откройте браузер и перейдите по адресу:
+echo Open browser and go to:
 echo   http://localhost:8000
 echo.
-echo Для остановки сервера нажмите Ctrl+C
+echo To stop the server press Ctrl+C
 echo.
 echo ==========================================
 echo.
 
-:: Запуск сервера
+:: Start server
 python main.py
 
-:: Если сервер остановился
+:: If server stopped
 echo.
-echo [INFO] Сервер остановлен
+echo [INFO] Server stopped
 pause

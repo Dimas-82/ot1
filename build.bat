@@ -1,85 +1,84 @@
 @echo off
-chcp 65001 >nul
 echo.
 echo ==========================================
-echo   АСУ "Охрана труда" - Сборка фронтенда
+echo   ASU "Occupational Safety" - Build Frontend
 echo ==========================================
 echo.
 
-:: Проверка наличия Node.js
+:: Check Node.js
 node --version >nul 2>&1
 if errorlevel 1 (
-    echo [ОШИБКА] Node.js не найден!
+    echo [ERROR] Node.js not found!
     echo.
-    echo Для сборки фронтенда необходим Node.js:
+    echo Node.js is required to build the frontend:
     echo https://nodejs.org/
     echo.
-    echo Если вы не планируете изменять фронтенд,
-    echo этот шаг можно пропустить.
+    echo If you don't need to modify the frontend,
+    echo you can skip this step.
     echo.
     pause
     exit /b 1
 )
 
-echo [INFO] Node.js найден:
+echo [INFO] Node.js found:
 node --version
 echo.
 
-:: Проверка наличия package.json
+:: Check package.json
 if not exist package.json (
-    echo [ОШИБКА] Файл package.json не найден!
+    echo [ERROR] File package.json not found!
     echo.
-    echo Убедитесь, что вы находитесь в корневой папке проекта.
+    echo Make sure you are in the project root folder.
     echo.
     pause
     exit /b 1
 )
 
-:: Установка зависимостей
-echo [INFO] Установка зависимостей npm...
+:: Install dependencies
+echo [INFO] Installing npm dependencies...
 call npm install
 if errorlevel 1 (
-    echo [ОШИБКА] Не удалось установить зависимости npm
+    echo [ERROR] Failed to install npm dependencies
     pause
     exit /b 1
 )
-echo [OK] Зависимости установлены
+echo [OK] Dependencies installed
 echo.
 
-:: Сборка проекта
-echo [INFO] Сборка фронтенда...
+:: Build project
+echo [INFO] Building frontend...
 call npm run build
 if errorlevel 1 (
-    echo [ОШИБКА] Не удалось собрать фронтенд
+    echo [ERROR] Failed to build frontend
     pause
     exit /b 1
 )
-echo [OK] Фронтенд собран
+echo [OK] Frontend built
 echo.
 
-:: Копирование в backend
-echo [INFO] Копирование файлов в backend...
+:: Copy to backend
+echo [INFO] Copying files to backend...
 if exist backend\dist (
     rmdir /s /q backend\dist
 )
 xcopy /e /i /q dist backend\dist
 if errorlevel 1 (
-    echo [ОШИБКА] Не удалось скопировать файлы
+    echo [ERROR] Failed to copy files
     pause
     exit /b 1
 )
-echo [OK] Файлы скопированы в backend\dist
+echo [OK] Files copied to backend\dist
 echo.
 
 echo ==========================================
-echo   Сборка завершена успешно!
+echo   Build completed successfully!
 echo ==========================================
 echo.
-echo Фронтенд собран и скопирован в папку backend\dist
+echo Frontend built and copied to backend\dist
 echo.
-echo Теперь вы можете запустить приложение:
-echo   1. Перейдите в папку backend
-echo   2. Запустите run.bat
-echo   3. Откройте http://localhost:8000
+echo Now you can start the application:
+echo   1. Go to backend folder
+echo   2. Run run.bat
+echo   3. Open http://localhost:8000
 echo.
 pause
