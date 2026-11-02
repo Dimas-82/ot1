@@ -107,6 +107,24 @@ if errorlevel 1 (
 echo [OK] Database initialized
 echo.
 
+:: Copy frontend dist if exists
+echo [INFO] Checking for frontend build...
+if exist ..\dist (
+    echo [INFO] Copying frontend to backend...
+    if exist dist (
+        rmdir /s /q dist
+    )
+    xcopy /e /i /q ..\dist dist
+    if errorlevel 1 (
+        echo [WARN] Failed to copy frontend
+    ) else (
+        echo [OK] Frontend copied
+    )
+) else (
+    echo [WARN] Frontend not built. Run build.bat in root folder first.
+)
+echo.
+
 echo ==========================================
 echo   Installation completed successfully!
 echo ==========================================

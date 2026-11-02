@@ -8,8 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, Text, ForeignKey, JSON
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, Session
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship, Session
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime, timedelta
@@ -695,6 +694,12 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
         "modules_active": db.query(Module).filter(Module.status == "active").count(),
         "routes_active": db.query(Route).filter(Route.active == True).count()
     }
+
+@app.get("/favicon.ico")
+async def favicon():
+    # Возвращаем пустой ответ для favicon
+    from fastapi.responses import Response
+    return Response(content=b"", media_type="image/x-icon")
 
 @app.get("/")
 async def serve_frontend():

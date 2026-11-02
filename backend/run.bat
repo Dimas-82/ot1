@@ -33,6 +33,18 @@ if not exist main.py (
     exit /b 1
 )
 
+:: Auto-copy frontend if needed
+if not exist dist (
+    if exist ..\dist (
+        echo [INFO] Copying frontend to backend...
+        xcopy /e /i /q ..\dist dist >nul 2>&1
+        if not errorlevel 1 (
+            echo [OK] Frontend copied
+        )
+    )
+)
+echo.
+
 echo [INFO] Starting server...
 echo.
 echo ==========================================
