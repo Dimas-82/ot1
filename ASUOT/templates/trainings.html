@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Инструктажи и обучение (ПП РФ №2464 от 24.12.2021)</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>Работник</label><select name="worker_id" required>{% for w in workers %}<option value="{{w.id}}">{{w.full_name}} · {{w.profession}}</option>{% endfor %}</select></div>
+<div><label>Вид</label><select name="kind">{% for k in ['Вводный инструктаж','Первичный инструктаж на рабочем месте','Повторный инструктаж','Внеплановый инструктаж','Целевой инструктаж','Обучение по охране труда (ПОРТ)','Проверка знаний требований ОТ'] %}<option>{{k}}</option>{% endfor %}</select></div>
+<div><label>Дата</label><input type="date" name="date" value="{{today}}" required></div>
+<div><label>Провёл</label><input name="instructor" placeholder="ФИО, должность"></div>
+<div><label>Часы</label><input type="number" name="hours" value="8" min="0" style="width:80px"></div>
+<div><label>Способ расчёта следующего срока</label><select name="method"><option value="auto">Автоматически (по законодательству)</option><option value="manual">Вручную</option></select></div>
+<div><label>Следующий срок (если вручную)</label><input type="date" name="next_date"></div>
+<div><label>№ записи в журнале</label><input name="doc_no" placeholder="ЖИ-..."></div>
+<button>Записать</button></form>
+<p style="font-size:12px;color:var(--muted)">Авто: повторный — 3 мес. (опасные работы) / 6 мес., проверка знаний — 1 год.</p></div>
+<div class="card"><form method="post" action="{{url_for('trainings_schedule')}}"><button>🔄 Автопланировать задачи по всем работникам</button></form></div>
+<div class="card"><table><tr><th>Дата</th><th>Работник</th><th>Вид</th><th>Провёл</th><th>Метод</th><th>Следующий</th></tr>
+{% for t in items %}<tr><td>{{t.date}}</td><td>#{{t.worker_id}}</td><td>{{t.kind}}</td><td>{{t.instructor}}</td>
+<td>{{'авто' if t.method=='auto' else 'ручной'}}</td><td>{{t.next_date or '—'}}</td></tr>{% endfor %}</table></div>
+{% endblock %}

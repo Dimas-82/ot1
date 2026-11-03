@@ -1,0 +1,20 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Работники</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>ФИО</label><input name="full_name" required></div>
+<div><label>Профессия (ручной ввод или выбор из профстандарта)</label>
+<input name="profession" id="prof" list="pslist" placeholder="напр. Электромонтёр" style="min-width:260px">
+<datalist id="pslist">{% for p in ps %}<option value="{{p.name}}">{{p.code}} ур.{{p.level}}</option>{% endfor %}</datalist></div>
+<div><label>Подразделение</label><select name="department_id"><option value="">—</option>
+{% for d in deps %}<option value="{{d.id}}">{{d.name}}</option>{% endfor %}</select></div>
+<div><label>Дата приёма</label><input type="date" name="hire_date" value="{{today}}" required></div>
+<div><label>Группа ЭБ</label><select name="electrical_group">{% for g in ['без группы','II','III','IV','V'] %}<option>{{g}}</option>{% endfor %}</select></div>
+<div><label>Характер работ</label><select name="work_type">
+<option>обычные условия</option><option>работы повышенной опасности</option><option>работы в электроустановках</option><option>работы на высоте</option></select></div>
+<button>Добавить</button></form>
+<p style="font-size:12px;color:var(--muted)">При добавлении автоматически формируются задачи по ПП РФ №2464 (вводный/первичный/повторный инструктаж, проверка знаний).</p></div>
+<div class="card"><table><tr><th>ФИО</th><th>Профессия</th><th>Подразделение</th><th>Приём</th><th>ЭБ</th><th>Работы</th><th></th></tr>
+{% for w in items %}<tr><td>{{w.full_name}}</td><td>{{w.profession}}</td><td>{{ (w.department().name) if w.department() else '—' }}</td>
+<td>{{w.hire_date}}</td><td>{{w.electrical_group}}</td><td>{{w.work_type}}</td>
+<td><a href="{{url_for('worker_delete',wid=w.id)}}" onclick="return confirm('Удалить?')">удалить</a></td></tr>{% endfor %}</table></div>
+{% endblock %}

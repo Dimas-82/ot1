@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Пользователи и права доступа</h1>
+<p style="color:var(--muted)">Схема: администратор выдаёт работнику расширенный доступ → инженер по охране труда подтверждает. Без подтверждения право не действует.</p>
+<div class="card"><form method="post" class="frow"><input type="hidden" name="action" value="create">
+<div><label>Логин</label><input name="username" required></div><div><label>Пароль</label><input name="password" required></div>
+<div><label>ФИО</label><input name="full_name"></div><div><label>Роль</label><select name="role"><option value="worker">Работник</option><option value="engineer">Инженер по ОТ</option><option value="admin">Администратор</option></select></div>
+<button>Создать</button></form></div>
+<div class="card"><table><tr><th>Логин</th><th>ФИО</th><th>Роль</th><th>Расш. права</th><th>Действия</th></tr>
+{% for u in items %}<tr><td>{{u.username}}</td><td>{{u.full_name}}</td><td>{{u.role}}</td>
+<td>{% if u.extra_perm and u.perm_confirmed_by %}<span style="color:green">✅ выдано и подтверждено</span>
+{% elif u.extra_perm %}<span class="red">⏳ ждёт подтверждения инженера</span>{% else %}—{% endif %}</td>
+<td style="display:flex;gap:6px;flex-wrap:wrap">
+{% if u.role=='worker' and not u.extra_perm %}<form method="post"><input type="hidden" name="action" value="grant"><input type="hidden" name="uid" value="{{u.id}}"><button style="padding:4px 8px">Выдать право</button></form>{% endif %}
+{% if u.extra_perm and not u.perm_confirmed_by %}<form method="post"><input type="hidden" name="action" value="confirm"><input type="hidden" name="uid" value="{{u.id}}"><button style="padding:4px 8px">Подтвердить (инженер)</button></form>{% endif %}
+{% if u.extra_perm %}<form method="post"><input type="hidden" name="action" value="revoke"><input type="hidden" name="uid" value="{{u.id}}"><button style="padding:4px 8px;background:#c01c28">Отозвать</button></form>{% endif %}
+<form method="post"><input type="hidden" name="action" value="toggle"><input type="hidden" name="uid" value="{{u.id}}"><button style="padding:4px 8px">{{'Отключить' if u.enabled else 'Включить'}}</button></form>
+</td></tr>{% endfor %}</table></div>
+{% endblock %}
