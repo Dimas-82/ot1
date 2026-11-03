@@ -1,0 +1,20 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Панель управления охраной труда</h1>
+<div class="grid">
+ <div class="card"><b>{{ stats.workers }}</b><br>работников</div>
+ <div class="card"><b>{{ stats.depts }}</b><br>подразделений</div>
+ <div class="card"><b>{{ stats.incidents }}</b><br>инцидентов</div>
+ <div class="card"><b>{{ stats.docs }}</b><br>документов</div>
+</div>
+{% if overdue_train %}<div class="card"><h2>⚠ Просроченные инструктажи/проверки</h2>
+<table><tr><th>Работник</th><th>Вид</th><th>Срок</th></tr>
+{% for t in overdue_train %}<tr><td>{{ (t.worker_id and '') or '' }}#{{ t.worker_id }}</td><td>{{ t.kind }}</td><td class="red">{{ t.next_date }}</td></tr>{% endfor %}</table></div>{% endif %}
+<div class="card"><h2>Ближайшие задачи и контроль</h2>
+<table><tr><th>Срок</th><th>Задача</th><th>Тип</th><th>Работник</th><th>Приоритет</th></tr>
+{% for t,w in upcoming %}<tr><td>{{ t.due_date }}{% if t.due_date < today %} <span class="red">(просрочено)</span>{% endif %}</td>
+<td>{{ t.title }}</td><td>{{ t.kind }}</td><td>{{ w.full_name if w else '—' }}</td><td>{{ t.priority }}</td></tr>
+{% else %}<tr><td colspan="5">Нет активных задач</td></tr>{% endfor %}</table></div>
+{% if not cur_user.can('engineer') %}<div class="card"><h2>Моя карточка</h2>
+<p>ФИО: {{ cur_user.full_name }} · Должность: {{ cur_user.position }}</p>
+<p><a class="btn" href="{{ url_for('notifications') }}">Мои уведомления о инструктажах и СИЗ</a></p></div>{% endif %}
+{% endblock %}

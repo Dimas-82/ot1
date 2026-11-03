@@ -1,0 +1,14 @@
+[Unit]
+Description=ASU OT - Sistema upravleniya okhranoy truda
+After=network.target
+
+[Service]
+User=asuot
+WorkingDirectory=/opt/ASUOT
+Environment=ASUOT_PORT=8080
+Environment=ASUOT_ORG=OOO Primer
+ExecStart=/opt/ASUOT/venv/bin/gunicorn -w 2 -b 0.0.0.0:8080 app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

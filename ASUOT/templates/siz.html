@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Учёт выдачи СИЗ, спецодежды, обуви (Приказы 766н/767н, ТР ТС 019/2011)</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>Работник</label><select name="worker_id" required>{% for w in workers %}<option value="{{w.id}}">{{w.full_name}}</option>{% endfor %}</select></div>
+<div><label>Наименование СИЗ</label><input name="item" required placeholder="Костюм, ботинки, каска..."></div>
+<div><label>Норма</label><input name="norm" value="Типовые нормы"></div>
+<div><label>Дата выдачи</label><input type="date" name="issue_date" value="{{today}}"></div>
+<div><label>Срок носки, мес.</label><input type="number" name="replace_period_m" value="12" style="width:90px"></div>
+<button>Выдать</button></form></div>
+<div class="card"><table><tr><th>Работник</th><th>СИЗ</th><th>Выдано</th><th>План замены</th><th>Статус</th><th></th></tr>
+{% for s in items %}<tr><td>#{{s.worker_id}}</td><td>{{s.item}}</td><td>{{s.issue_date}}</td>
+<td class="{{'red' if s.due_date()<today}}">{{s.due_date()}}</td><td>{{s.status}}</td>
+<td>{% if s.status=='Выдано' %}<a href="{{url_for('siz_close',sid=s.id)}}">списать</a>{% endif %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

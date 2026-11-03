@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Инциденты и расследования (гл.7 ТК РФ, Приказ Минтруда №776н)</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>Дата</label><input type="date" name="date" value="{{today}}" required></div>
+<div><label>Вид</label><select name="kind"><option>Несчастный случай на производстве</option><option>Инцидент (потенциальный НС)</option><option>Авария/отклонение</option></select></div>
+<div><label>Пострадавший</label><select name="worker_id"><option value="">—</option>{% for w in workers %}<option value="{{w.id}}">{{w.full_name}}</option>{% endfor %}</select></div>
+<div><label>Тяжесть</label><select name="severity"><option>Лёгкий</option><option>Тяжёлый</option><option>Групповой</option><option>Со смертельным исходом</option></select></div>
+<div><label>Место</label><input name="location"></div>
+<div><label>Комиссия (ФИО через ;)</label><input name="commission" style="min-width:250px"></div>
+<div style="flex:1"><label>Обстоятельства</label><input name="description" style="width:100%"></div>
+<button>Зарегистрировать</button></form></div>
+{% for i in items %}
+<div class="card"><b>Инцидент №{{i.id}}</b> · {{i.date.strftime('%d.%m.%Y')}} · {{i.kind}} · <span class="badge">{{i.severity}}</span> · статус: {{i.status}}
+<br>Место: {{i.location}} · Пострадавший: #{{i.worker_id or '—'}}<br>{{i.description}}
+{% if i.investigation_deadline %}<br><small>Срок расследования: <b class="{{'red' if i.investigation_deadline<today}}">{{i.investigation_deadline}}</b></small>{% endif %}
+{% if i.status!='Расследован' %}
+<form method="post" action="{{url_for('incident_investigate',iid=i.id)}}" class="frow" style="margin-top:8px">
+<div style="flex:1"><label>Причина</label><input name="cause" style="width:100%" required></div>
+<div style="flex:1"><label>Мероприятия по устранению</label><input name="measures" style="width:100%"></div>
+<button>✅ Завершить расследование → протокол + акт Н-1</button></form>
+{% endif %}</div>
+{% else %}<div class="card">Инцидентов нет.</div>{% endfor %}
+{% endblock %}

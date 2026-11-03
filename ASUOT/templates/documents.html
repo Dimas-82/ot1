@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Документы (протоколы, акты Н-1, записи журналов)</h1>
+<div class="card"><table><tr><th>Дата</th><th>Тип</th><th>Наименование</th><th>Номер</th><th></th></tr>
+{% for d in items %}<tr><td>{{d.date}}</td><td>{{d.doctype}}</td><td>{{d.title}}</td><td>{{d.number}}</td>
+<td><a class="btn" style="padding:4px 10px" href="{{url_for('document_print',did=d.id)}}" target="_blank">🖨 Открыть/печать</a></td></tr>{% endfor %}</table></div>
+{% endblock %}

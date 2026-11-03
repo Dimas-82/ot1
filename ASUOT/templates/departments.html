@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Подразделения (отдел, цех, бригада — ручной ввод)</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>Наименование</label><input name="name" required></div>
+<div><label>Тип</label><select name="kind">{% for k in ['Подразделение','Отдел','Цех','Участок','Бригада','Служба'] %}<option>{{k}}</option>{% endfor %}</select></div>
+<div><label>Руководитель</label><input name="head"></div>
+<div><label>Родительское</label><select name="parent_id"><option value="">— нет —</option>
+{% for d in items %}<option value="{{d.id}}">{{d.name}}</option>{% endfor %}</select></div>
+<button>Создать</button></form></div>
+<div class="card"><table><tr><th>Наименование</th><th>Тип</th><th>Руководитель</th><th>Иерархия</th><th></th></tr>
+{% for d in items %}<tr><td>{{d.name}}</td><td>{{d.kind}}</td><td>{{d.head}}</td>
+<td>{% for c in d.children() %}↳ {{c.name}} {% endfor %}</td>
+<td>{% if cur_user.role=='admin' %}<a href="{{url_for('dept_delete',did=d.id)}}" onclick="return confirm('Удалить?')">удалить</a>{% endif %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

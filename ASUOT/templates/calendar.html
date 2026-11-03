@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Календарь задач и контроля</h1>
+<div class="card"><a class="btn" href="?ym={{prev}}">←</a> <b style="font-size:18px;text-transform:capitalize"> {{month_name}} </b> <a class="btn" href="?ym={{next}}">→</a></div>
+<div class="card"><div class="cal">
+{% for wd in ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'] %}<div style="text-align:center;color:var(--muted);font-size:12px">{{wd}}</div>{% endfor %}
+{% set offset = cells[0][0].weekday() %}{% for i in range(offset) %}<div></div>{% endfor %}
+{% for d, evs in cells %}<div class="day"><b>{{d.day}}</b>{% if d==today %} •{% endif %}
+{% for e,p in evs[:4] %}<div class="ev" {% if p=='Высокий' %}style="border-left-color:#c01c28"{% endif %}>{{e}}</div>{% endfor %}
+{% if evs|length>4 %}<div style="color:var(--muted)">+{{evs|length-4}}</div>{% endif %}</div>{% endfor %}
+</div></div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Профиль</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>ФИО</label><input name="full_name" value="{{u.full_name}}"></div>
+<div><label>Новый пароль (оставьте пустым чтобы не менять)</label><input type="password" name="new_password"></div>
+<button>Сохранить</button></form></div>
+{% endblock %}

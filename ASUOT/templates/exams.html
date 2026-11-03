@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Экзамены по электробезопасности (Приказ 900н / Приказ 1062н Минэнерго)</h1>
+<div class="card"><form method="post" class="frow">
+<div><label>Дата</label><input type="date" name="date" value="{{today}}" required></div>
+<div><label>Группа</label><select name="group">{% for g in ['II','III','IV','V'] %}<option>{{g}}</option>{% endfor %}</select></div>
+<div><label>Председатель комиссии</label><input name="chairman" required placeholder="ФИО, гр. ЭБ, должность"></div>
+<div><label>Члены комиссии (через ;)</label><input name="members" style="min-width:250px"></div>
+<div><label>Проверяемые (через ;)</label><input name="candidates" style="min-width:250px"></div>
+<div><label>Результат</label><input name="result" value="Прошли проверку знаний"></div>
+<button>Провести → создать протокол</button></form>
+<p style="font-size:12px;color:var(--muted)">Протокол формируется автоматически. Периодичность: группы III–V (электротехнологические работы) — 1 год, остальные — 3 года.</p></div>
+<div class="card"><table><tr><th>Дата</th><th>Группа</th><th>Председатель</th><th>Члены</th><th>Проверяемые</th><th>Следующая проверка</th></tr>
+{% for e in items %}<tr><td>{{e.date}}</td><td>{{e.group}}</td><td>{{e.chairman}}</td><td>{{e.members}}</td><td>{{e.candidates}}</td><td>{{e.next_date}}</td></tr>{% endfor %}</table></div>
+{% endblock %}

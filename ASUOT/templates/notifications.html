@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Мои уведомления</h1>
+<div class="card">{% if w %}<p>{{w.full_name}} · {{w.profession}}</p>
+<table><tr><th>Срок</th><th>Событие</th><th>Тип</th></tr>
+{% for t in tasks %}<tr><td class="{{'red' if t.due_date<today}}">{{t.due_date}}</td><td>{{t.title}}</td><td>{{t.kind}}</td></tr>
+{% else %}<tr><td colspan="3">Активных уведомлений нет ✅</td></tr>{% endfor %}</table>
+{% else %}<p>Ваша учётная запись не привязана к карточке работника. Обратитесь к инженеру по охране труда.</p>{% endif %}</div>
+{% endblock %}
